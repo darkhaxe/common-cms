@@ -1,15 +1,15 @@
 import request from 'request-promise'
 
-const base = 'https://api.weixin.qq.com/cgi-bin'
+const base = 'https://api.weixin.qq.com/cgi-bin';
 const api = {
     authorize: 'https://open.weixin.qq.com/connect/oauth2/authorize?',
     accessToken: base + 'oauth2/access_token?',
     userInfo: base + 'userinfo?'
-}
+};
 
 export default class WechatOAuth {
     constructor(opts) {
-        this.appID = opts.appID
+        this.appID = opts.appID;
         this.appSecret = opts.appSecret
     }
 
@@ -17,7 +17,7 @@ export default class WechatOAuth {
      *统一请求wechat
      */
     static async requestWechat(opts) {
-        opts = Object.assign({}, opts, {json: true})
+        opts = Object.assign({}, opts, {json: true});
         try {
             return await request(opts)
         } catch (e) {
@@ -39,12 +39,12 @@ export default class WechatOAuth {
 
     async fetchAccessToken() {
         let url = `${api.accessToken}appid=${this.appID}&secret=${this.appSecret}
-            &code=${code}&grant_type=authorization_code`
+            &code=${code}&grant_type=authorization_code`;
         return await this.requestWechat({url: url})
     }
 
     async getUserInfo(token, openId, lang = 'zh_CN') {
-        const url = `${api.user.info}access_token=${token}&openid=${openId}&lang=${lang}`
+        const url = `${api.user.info}access_token=${token}&openid=${openId}&lang=${lang}`;
         return await this.requestWechat(url)
     }
 }

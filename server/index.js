@@ -7,19 +7,19 @@ import Nuxt from 'nuxt'
 // 列和数据的变换传递变得更容易
 import R from 'ramda'
 
-let config = require('../nuxt.config.js')
-config.dev = !(process.env === 'production') // 判断是否生产环境
+let config = require('../nuxt.config.js');
+config.dev = !(process.env === 'production'); // 判断是否生产环境
 
-const r = path => resolve(__dirname, path)
-const host = process.env.HOST || '127.0.0.1'
-const port = process.env.POST || 3000
+const r = path => resolve(__dirname, path);
+const host = process.env.HOST || '127.0.0.1';
+const port = process.env.POST || 3000;
 //本项目加载的中间件
 //common.js是解析post参数的中间件,必须放在router之前才能生效
-const MIDDLEWARES = ['database', 'common', 'router']
+const MIDDLEWARES = ['database', 'common', 'router'];
 
 class Server {
     constructor() {
-        this.app = new Koa()
+        this.app = new Koa();
         this.useMiddleware(this.app)(MIDDLEWARES)
     }
 
@@ -38,26 +38,26 @@ class Server {
     }
 
     async start() {
-        const nuxt = await new Nuxt(config)
+        const nuxt = await new Nuxt(config);
         // 测试环境
         if (conf.env !== 'production') {
             try {
                 await nuxt.build()
             } catch (e) {
-                console.error(e)
+                console.error(e);
                 process.exit(1)
             }
         }
 
         this.app.use(async (ctx, next) => {
-            ctx.status = 200
+            ctx.status = 200;
             // 渲染html
             await nuxt.render(ctx.req, ctx.res)
-        })
-        this.app.listen(port, host)
+        });
+        this.app.listen(port, host);
         console.log('--> Server listening on ' + host + ':' + port)
     }
 }
 
-const app = new Server()
-app.start()
+const app = new Server();
+app.start();

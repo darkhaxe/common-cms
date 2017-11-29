@@ -6,7 +6,7 @@ import fs from 'fs'
 import * as _ from 'lodash'
 import * as util from './util'
 
-const base = 'https://api.weixin.qq.com/cgi-bin'
+const base = 'https://api.weixin.qq.com/cgi-bin';
 const api = { // 存放微信各类接口
     accessToken: base + '/token?grant_type=client_credential&appid=APPID&secret=APPSECRET',
     temporary: {// 临时素材
@@ -54,18 +54,18 @@ const api = { // 存放微信各类接口
         get: base + 'ticket/getticket?'
     }
 
-}
+};
 
 export default class WechatApi {
     constructor(opts) {
-        this.opts = Object.assign({}, opts)
-        this.appID = opts.appID
-        this.appSecret = opts.appSecret
+        this.opts = Object.assign({}, opts);
+        this.appID = opts.appID;
+        this.appSecret = opts.appSecret;
         // 方法
-        this.getAccessToken = opts.getAccessToken
-        this.saveAccessToken = opts.saveAccessToken
-        this.getTicket = opts.getTicket
-        this.saveTicket = opts.saveTicket
+        this.getAccessToken = opts.getAccessToken;
+        this.saveAccessToken = opts.saveAccessToken;
+        this.getTicket = opts.getTicket;
+        this.saveTicket = opts.saveTicket;
         this.fetchAccessToken()
     }
 
@@ -83,7 +83,7 @@ export default class WechatApi {
      *统一请求wechat
      */
     async requestWechat(opts) {
-        opts = Object.assign({}, opts, {json: true})
+        opts = Object.assign({}, opts, {json: true});
         try {
             return await request(opts)
         } catch (e) {
@@ -98,8 +98,8 @@ export default class WechatApi {
      * @returns {Promise.<*>}
      */
     async handle(operation, ...args) {
-        const tokenData = await this.fetchAccessToken()
-        const options = this[operation](tokenData.access_token, ...args)
+        const tokenData = await this.fetchAccessToken();
+        const options = this[operation](tokenData.access_token, ...args);
         return await this.requestWechat(options)
     }
 
@@ -114,34 +114,34 @@ export default class WechatApi {
     }
 
     async fetchAccessToken() {
-        let data = await this.getAccessToken
+        let data = await this.getAccessToken;
         if (this._isValid(data, 'token')) {
             return await this.updateAccessToken()
         }
-        await this.saveAccessToken(data)
+        await this.saveAccessToken(data);
         return data
     }
 
     async fetchTicket() {
-        let data = await this.getTicket()
+        let data = await this.getTicket();
         if (this._isValid(data, 'ticket')) {
             return await this.updateTicket()
         }
     }
 
     async updateAccessToken() {
-        const url = api.accessToken + '&appid=' + this.appID + '&secret=' + this.appSecret
-        let data = await this.requestWechat({url: url})
+        const url = api.accessToken + '&appid=' + this.appID + '&secret=' + this.appSecret;
+        let data = await this.requestWechat({url: url});
         // 20s缓冲时间
-        data.expires_in = new Date().getTime() + (data.expires_in - 20) * 1000
+        data.expires_in = new Date().getTime() + (data.expires_in - 20) * 1000;
         return data
     }
 
     async updateTicket(token) {
-        const url = api.ticket.get + '&access_token=' + token + '&type=jsapi'
-        let data = await this.requestWechat({url: url})
+        const url = api.ticket.get + '&access_token=' + token + '&type=jsapi';
+        let data = await this.requestWechat({url: url});
         // 20s缓冲时间
-        data.expires_in = new Date().getTime() + (data.expires_in - 20) * 1000
+        data.expires_in = new Date().getTime() + (data.expires_in - 20) * 1000;
         return data
     }
 
@@ -154,11 +154,11 @@ export default class WechatApi {
      * @returns {{method: string, url: string, json: boolean}}
      */
     uploadMaterial(token, type, material, permanent) {
-        let form = {} // 构建表单
-        let url = api.temporary.upload // 上传地址
+        let form = {}; // 构建表单
+        let url = api.temporary.upload; // 上传地址
 
         if (permanent) {
-            url = api.permanent.upload
+            url = api.permanent.upload;
 
             _.extend(form, permanent)
         }
@@ -168,13 +168,13 @@ export default class WechatApi {
         }
 
         if (type === 'news') { // 图文
-            url = api.permanent.uploadNews
+            url = api.permanent.uploadNews;
             form = material
         } else { // 图片或视频
             form.media = fs.createReadStream(material)
         }
 
-        let uploadUrl = url + 'access_token=' + token
+        let uploadUrl = url + 'access_token=' + token;
         // ----------------------拼接url区分-------------------------
         if (!permanent) {
             uploadUrl += '&type=' + type
@@ -189,7 +189,7 @@ export default class WechatApi {
             method: 'POST',
             url: uploadUrl,
             json: true
-        }
+        };
 
         if (type === 'news') {
             options.body = form
@@ -203,8 +203,8 @@ export default class WechatApi {
     deleteMaterial(token, mediaId) {
         const form = {
             media_id: mediaId
-        }
-        const url = api.permanent.del + 'access_token=' + token + '&media_id' + mediaId
+        };
+        const url = api.permanent.del + 'access_token=' + token + '&media_id' + mediaId;
         // 发送请求的配置项
         return {method: 'POST', url: url, body: form}
     }
@@ -212,26 +212,26 @@ export default class WechatApi {
     updateMaterial(token, mediaId, news) {
         const form = {
             media_id: mediaId
-        }
+        };
 
-        _.extend(form, news)
-        const url = api.permanent.update + 'access_token=' + token + '&media_id=' + mediaId
+        _.extend(form, news);
+        const url = api.permanent.update + 'access_token=' + token + '&media_id=' + mediaId;
 
         return {method: 'POST', url: url, body: form}
     }
 
     countMaterial(token) {
-        const url = api.permanent.count + 'access_token=' + token
+        const url = api.permanent.count + 'access_token=' + token;
 
         return {method: 'POST', url: url}
     }
 
     batchMaterial(token, options) {
-        options.type = options.type || 'image'
-        options.offset = options.offset || 0
-        options.count = options.count || 10
+        options.type = options.type || 'image';
+        options.offset = options.offset || 0;
+        options.count = options.count || 10;
 
-        const url = api.permanent.batch + 'access_token=' + token
+        const url = api.permanent.batch + 'access_token=' + token;
 
         return {method: 'POST', url: url, body: options}
     }
@@ -241,14 +241,14 @@ export default class WechatApi {
             tag: {
                 name: name
             }
-        }
-        const url = api.tag.create + 'access_token=' + token
+        };
+        const url = api.tag.create + 'access_token=' + token;
 
         return {method: 'POST', url: url, body: form}
     }
 
     fetchTags(token) {
-        const url = api.tag.fetch + 'access_token=' + token
+        const url = api.tag.fetch + 'access_token=' + token;
 
         return {url: url}
     }
@@ -259,9 +259,9 @@ export default class WechatApi {
                 id: tagId,
                 name: name
             }
-        }
+        };
 
-        const url = api.tag.update + 'access_token=' + token
+        const url = api.tag.update + 'access_token=' + token;
 
         return {method: 'POST', url: url, body: form}
     }
@@ -271,9 +271,9 @@ export default class WechatApi {
             tag: {
                 id: tagId
             }
-        }
+        };
 
-        const url = api.tag.del + 'access_token=' + token
+        const url = api.tag.del + 'access_token=' + token;
 
         return {method: 'POST', url: url, body: form}
     }
@@ -282,72 +282,72 @@ export default class WechatApi {
         const form = {
             openid: openId,
             remark: remark
-        }
-        const url = api.user.remark + 'access_token=' + token
+        };
+        const url = api.user.remark + 'access_token=' + token;
 
         return {method: 'POST', url: url, body: form}
     }
 
     getUserInfo(token, openId, lang) {
-        const url = `${api.user.info}access_token=${token}&openid=${openId}&lang=${lang || 'zh_CN'}`
+        const url = `${api.user.info}access_token=${token}&openid=${openId}&lang=${lang || 'zh_CN'}`;
 
         return {url: url}
     }
 
     batchUserInfo(token, userList) {
-        const url = api.user.batchInfo + 'access_token=' + token
+        const url = api.user.batchInfo + 'access_token=' + token;
         const form = {
             user_list: userList
-        }
+        };
 
         return {method: 'POST', url: url, body: form}
     }
 
     fetchUserList(token, openId) {
-        const url = `${api.user.fetchUserList}access_token=${token}&next_openid=${openId || ''}`
+        const url = `${api.user.fetchUserList}access_token=${token}&next_openid=${openId || ''}`;
 
         return {url: url}
     }
 
     createMenu(token, menu) {
-        const url = api.menu.create + 'access_token=' + token
+        const url = api.menu.create + 'access_token=' + token;
 
         return {method: 'POST', url: url, body: menu}
     }
 
     getMenu(token) {
-        const url = api.menu.get + 'access_token=' + token
+        const url = api.menu.get + 'access_token=' + token;
 
         return {url: url}
     }
 
     delMenu(token) {
-        const url = api.menu.del + 'access_token=' + token
+        const url = api.menu.del + 'access_token=' + token;
 
         return {url: url}
     }
 
     addConditionMenu(token, menu, rule) {
-        const url = api.menu.addCondition + 'access_token=' + token
+        const url = api.menu.addCondition + 'access_token=' + token;
         const form = {
             button: menu,
             matchrule: rule
-        }
+        };
 
         return {method: 'POST', url: url, body: form}
     }
 
     delConditionMenu(token, menuId) {
-        const url = api.menu.delCondition + 'access_token=' + token
+        const url = api.menu.delCondition + 'access_token=' + token;
         const form = {
             menuid: menuId
-        }
+        };
 
         return {method: 'POST', url: url, body: form}
     }
 
     getCurrentMenuInfo(token) {
-        const url = api.menu.getInfo + 'access_token=' + token
+        const url = api.menu.getInfo + 'access_token=' + token;
 
         return {url: url}
     }

@@ -1,6 +1,6 @@
 // Schema:存放全局票据
 // 给mongoose查询绑定自定义方法,最后一行
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 // 字段定义
 const TokenSchema = new mongoose.Schema(
@@ -19,10 +19,10 @@ const TokenSchema = new mongoose.Schema(
             }
         }
     }
-)
+);
 
 // 绑定TokenSchema到mongoose.model(),在服务启动之后全局可以使用mongoose.model('Token')获取自定义的方法
-const TokenModel = mongoose.model('Token', TokenSchema)
+const TokenModel = mongoose.model('Token', TokenSchema);
 
 // 存储前执行此回调函数
 TokenSchema.pre('save', function (next) {
@@ -33,7 +33,7 @@ TokenSchema.pre('save', function (next) {
     }
     // 回调,交出控制权
     next()
-})
+});
 
 // 静态方法
 // 方法间需要加上逗号
@@ -45,9 +45,9 @@ TokenSchema.statics = {
         // }
     },
     async saveTicket(data) {
-        let doc = await this.findOne({name: 'access_token'}).exec()
+        let doc = await this.findOne({name: 'access_token'}).exec();
         if (doc) {
-            doc.access_token = data.access_token
+            doc.access_token = data.access_token;
             doc.expires_in = data.expires_in
         } else {
             doc = new TokenModel({
@@ -63,4 +63,4 @@ TokenSchema.statics = {
         }
         return data
     }
-}
+};

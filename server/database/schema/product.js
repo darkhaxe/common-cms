@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
-const {Schema} = mongoose
-const Mixed = Schema.Types.Mixed
+const mongoose = require('mongoose');
+const {Schema} = mongoose;
+const Mixed = Schema.Types.Mixed;
 
 const ProductSchema = new Schema({
     price: String,
@@ -12,6 +12,6 @@ const ProductSchema = new Schema({
     images: [
         String
     ]
-})
+});
 
-mongoose.model('Product', ProductSchema)
+mongoose.model('Product', ProductSchema);

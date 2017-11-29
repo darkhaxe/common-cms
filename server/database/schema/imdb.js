@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const {Schema} = mongoose
+const mongoose = require('mongoose');
+const {Schema} = mongoose;
 
 const IMDbSchema = new Schema({
     playedBy: String,
@@ -11,6 +11,6 @@ const IMDbSchema = new Schema({
         String
     ],
     profile: String
-})
+});
 
-mongoose.model('IMDb', IMDbSchema)
+mongoose.model('IMDb', IMDbSchema);

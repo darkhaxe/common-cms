@@ -1,8 +1,8 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema
-const ObjectId = Schema.Types.ObjectId
-const Mixed = Schema.Types.Mixed
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
+const Mixed = Schema.Types.Mixed;
 
 const PaymentSchema = new Schema({
     user: {type: ObjectId, ref: 'User'},
@@ -25,7 +25,7 @@ const PaymentSchema = new Schema({
             default: Date.now()
         }
     }
-})
+});
 
 PaymentSchema.pre('save', function (next) {
     if (this.isNew) {
@@ -35,6 +35,6 @@ PaymentSchema.pre('save', function (next) {
     }
 
     next()
-})
+});
 
-mongoose.model('Payment', PaymentSchema)
+mongoose.model('Payment', PaymentSchema);

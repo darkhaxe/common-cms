@@ -13,7 +13,7 @@ import {Route} from '../decorator/router' // 自己封装的Router中间件
  * @param app 即koa
  */
 export const router = app => {
-    let controllerPath = resolve(__dirname, '../routes') //加载routes文件夹下所有controller
+    let controllerPath = resolve(__dirname, '../routes'); //加载routes文件夹下所有controller
     // console.log(`/server/middleware/router.js-->controllerPath=${controllerPath}`)
     new Route(app, controllerPath).init() // 构造路由并启动
 
@@ -28,4 +28,4 @@ export const router = app => {
     // app.use(router.routes())
     //     .use(router.allowedMethods())
     // -----------------------------改造前----------------------------------------
-}
+};

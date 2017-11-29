@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
-const {Schema} = mongoose
-const Mixed = Schema.Types.Mixed
+const mongoose = require('mongoose');
+const {Schema} = mongoose;
+const Mixed = Schema.Types.Mixed;
 
 const HouseSchema = new Schema({
     name: String,
@@ -16,6 +16,6 @@ const HouseSchema = new Schema({
             text: String
         }
     ]
-})
+});
 
-mongoose.model('WikiHouse', HouseSchema)
+mongoose.model('WikiHouse', HouseSchema);

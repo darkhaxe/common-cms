@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
-const {Schema} = mongoose
-const {ObjectId} = Schema
+const mongoose = require('mongoose');
+const {Schema} = mongoose;
+const {ObjectId} = Schema;
 
 const CreationSchema = new Schema({
     author: {
@@ -47,6 +47,6 @@ const CreationSchema = new Schema({
             dafault: Date.now()
         }
     }
-})
+});
 
-mongoose.model('Creation', CreationSchema)
+mongoose.model('Creation', CreationSchema);

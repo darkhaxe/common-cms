@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const {Schema} = mongoose
+const mongoose = require('mongoose');
+const {Schema} = mongoose;
 
 const CharacterSchema = new Schema({
     _id: String,
@@ -34,15 +34,15 @@ const CharacterSchema = new Schema({
     playedBy: [
         String
     ]
-})
+});
 
-CharacterSchema.set('toJSON', {virtuals: true})
+CharacterSchema.set('toJSON', {virtuals: true});
 
 CharacterSchema.virtual('IMDb', {
     ref: 'IMDb',
     localField: 'name',
     foreignField: 'name',
     justOne: true
-})
+});
 
-mongoose.model('Character', CharacterSchema)
+mongoose.model('Character', CharacterSchema);

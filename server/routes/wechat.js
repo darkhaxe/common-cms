@@ -10,7 +10,7 @@ export class WxController {
     @get('/wechat-hear')
     @log
     async wxHear(ctx, next) {
-        const middle = wechatMiddle(config.core, reply)
+        const middle = wechatMiddle(config.core, reply);
         await middle(ctx, next)
     }
 
@@ -21,7 +21,7 @@ export class WxController {
 
     @get('/wechat-redirect')
     async wxRedirect(ctx, next) {
-        console.log('into redirect')
+        console.log('into redirect');
         await wechat.redirect(ctx, next)
     }
 

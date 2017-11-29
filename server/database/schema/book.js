@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const {Schema} = mongoose
+const mongoose = require('mongoose');
+const {Schema} = mongoose;
 
 const BookSchema = new Schema({
     _id: String,
@@ -20,6 +20,6 @@ const BookSchema = new Schema({
     povCharacters: [
         {type: String, ref: 'Character'}
     ]
-})
+});
 
-mongoose.model('Book', BookSchema)
+mongoose.model('Book', BookSchema);

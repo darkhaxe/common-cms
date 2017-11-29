@@ -6,12 +6,12 @@ import _ from 'lodash'
 import xss from 'xss'
 import R from 'ramda'
 
-const Character = mongoose.model('Character')
-const House = mongoose.model('House')
-const Book = mongoose.model('Book')
-const IMDb = mongoose.model('IMDb')
+const Character = mongoose.model('Character');
+const House = mongoose.model('House');
+const Book = mongoose.model('Book');
+const IMDb = mongoose.model('IMDb');
 // const User = mongoose.model('User')
-const Product = mongoose.model('Product')
+const Product = mongoose.model('Product');
 // const Payment = mongoose.model('Payment')
 // const ExamResult = mongoose.model('ExamResult')
 
@@ -25,7 +25,7 @@ const NINE_HOUSES = [
     `House Tyrell of Highgarden`,
     `House Tully of Riverrun`,
     `House Arryn of the Eyrie`
-]
+];
 
 // const typeOf = value => {
 //   let t = R.type(value)
@@ -57,7 +57,7 @@ export class DatabaseController {
             .populate({
                 path: 'IMDb'
             })
-            .exec()
+            .exec();
 
         ctx.body = res
     }
@@ -70,7 +70,7 @@ export class DatabaseController {
             })
             .populate('url')
             .limit(30)
-            .exec()
+            .exec();
 
         ctx.body = res
     }
@@ -85,21 +85,21 @@ export class DatabaseController {
             .populate({
                 path: 'swornMembers'
             })
-            .exec()
+            .exec();
 
         var povCharacters = await IMDb
             .find({})
             .select('name url')
-            .exec()
+            .exec();
 
         houses = _.map(houses, house => {
             house.swornMembers = _.filter(house.swornMembers, item =>
-                _.find(povCharacters, {url: item.url}))
+                _.find(povCharacters, {url: item.url}));
 
             return house
-        })
+        });
 
-        houses = _.sortBy(houses, [item => -item.swornMembers.length])
+        houses = _.sortBy(houses, [item => -item.swornMembers.length]);
         ctx.body = houses
     }
 
@@ -107,7 +107,7 @@ export class DatabaseController {
     async dbBooks(ctx, next) {
         var res = await Book
             .find({})
-            .exec()
+            .exec();
 
         ctx.body = res
     }
@@ -115,44 +115,44 @@ export class DatabaseController {
     @get('products/:_id')
     @log
     async getProduct(ctx, next) {
-        const {_id} = ctx.params
-        console.log(_id)
-        if (!_id) return (ctx.body = '_id is required')
+        const {_id} = ctx.params;
+        console.log(_id);
+        if (!_id) return (ctx.body = '_id is required');
 
         let product = await Product
             .findById(_id)
-            .exec()
+            .exec();
 
         ctx.body = product
     }
 
     @get('products')
     async getProducts(ctx, next) {
-        let {limit = 50} = ctx.query
+        let {limit = 50} = ctx.query;
         let products = await Product
             .find({})
             .limit(Number(limit))
-            .exec()
+            .exec();
 // console.log(products)
         ctx.body = products
     }
 
     @post('products')
     async postProducts(ctx, next) {
-        let reqProd = ctx.request.body
-        console.log(ctx.request.body)
+        let reqProd = ctx.request.body;
+        console.log(ctx.request.body);
         let prod = {
             title: xss(reqProd.title),
             price: xss(reqProd.price),
             intro: xss(reqProd.intro),
             parameters: R.map(item => ({key: xss(item.key), value: xss(item.value)}))(reqProd.parameters),
             images: R.map(xss)(reqProd.images)
-        }
+        };
 
-        let dbProd = new Product(prod)
+        let dbProd = new Product(prod);
 
         try {
-            await dbProd.save()
+            await dbProd.save();
             ctx.body = dbProd
 
         } catch (e) {
@@ -162,23 +162,23 @@ export class DatabaseController {
 
     @put('products')
     async putProducts(ctx, next) {
-        let body = ctx.request.body
-        const {_id} = body
+        let body = ctx.request.body;
+        const {_id} = body;
 
-        let product = await Product.findById(_id).exec()
+        let product = await Product.findById(_id).exec();
 
         if (!product) {
             return (ctx.body = 'product not exist')
         }
 
-        product.title = xss(body.title)
-        product.price = xss(body.price)
-        product.intro = xss(body.intro)
-        product.parameters = R.map(item => ({key: xss(item.key), value: xss(item.value)}))(body.parameters)
-        product.images = R.map(xss)(body.images)
+        product.title = xss(body.title);
+        product.price = xss(body.price);
+        product.intro = xss(body.intro);
+        product.parameters = R.map(item => ({key: xss(item.key), value: xss(item.value)}))(body.parameters);
+        product.images = R.map(xss)(body.images);
 
         try {
-            await product.save()
+            await product.save();
             ctx.body = product
 
         } catch (e) {
@@ -189,8 +189,8 @@ export class DatabaseController {
     //获取七牛的token,用于图片上传校验
     @get('qiniu/token')
     async qiniuToken(ctx, next) {
-        let key = ctx.query.key
-        let token = qiniu.uptoken(key)
+        let key = ctx.query.key;
+        let token = qiniu.uptoken(key);
 
         ctx.body = {
             key: key,
@@ -200,15 +200,15 @@ export class DatabaseController {
 
     @get('users')
     async dbUsers(ctx, next) {
-        const res = await User.find({}).exec()
+        const res = await User.find({}).exec();
 
         ctx.body = res
     }
 
     @get('users/:id')
     async dbUser(ctx, next) {
-        const id = ctx.params.id
-        const res = await User.findOne({_id: id}).exec()
+        const id = ctx.params.id;
+        const res = await User.findOne({_id: id}).exec();
 
         ctx.body = res
     }
@@ -218,7 +218,7 @@ export class DatabaseController {
         const res = await Payment
             .find({success: 1})
             .populate('product user')
-            .exec()
+            .exec();
         ctx.body = res
     }
 
@@ -226,11 +226,11 @@ export class DatabaseController {
     @log
     @required({body: ['email', 'password']})
     async login(ctx, next) {
-        const {email, password} = ctx.request.body
+        const {email, password} = ctx.request.body;
 
         try {
-            var user = await User.findOne({email: email}).exec()
-            var match = null
+            var user = await User.findOne({email: email}).exec();
+            var match = null;
             if (user) match = await user.comparePassword(password, user.password)
         } catch (e) {
             throw new Error(e)
@@ -243,7 +243,7 @@ export class DatabaseController {
                 email: user.email,
                 nickname: user.nickname,
                 avatarUrl: user.avatarUrl
-            }
+            };
 
             return ctx.body = {
                 ret: 0,
@@ -266,58 +266,58 @@ export class DatabaseController {
 
     @post('logout')
     async logout(ctx, next) {
-        console.log('logout')
+        console.log('logout');
         console.log(ctx.request.body)
     }
 
     @post('exam')
     @required({body: ['openid', 'profession', 'house']})
     async finishExam(ctx, next) {
-        const sessionOpenid = ctx.session.openid
-        const {openid, profession, house} = ctx.request.body
+        const sessionOpenid = ctx.session.openid;
+        const {openid, profession, house} = ctx.request.body;
 
-        if (sessionOpenid !== openid) ctx.throw(501, 'your openid is illegal!')
+        if (sessionOpenid !== openid) ctx.throw(501, 'your openid is illegal!');
 
-        let people = await ExamResult.findOne({openid: openid}).exec()
+        let people = await ExamResult.findOne({openid: openid}).exec();
 
-        let resIntro = null
-        let resImg = null
+        let resIntro = null;
+        let resImg = null;
 
         if (people) {
-            let elem = people.result.find(e => e.profession === profession)
+            let elem = people.result.find(e => e.profession === profession);
 
             if (elem) {
-                resIntro = elem.intro
+                resIntro = elem.intro;
                 resImg = elem.imgUrl
             } else {
-                let result = randomIntro(profession)
-                resIntro = result.intro
-                resImg = result.imgUrl
+                let result = randomIntro(profession);
+                resIntro = result.intro;
+                resImg = result.imgUrl;
 
-                let copyP = people.result.slice()
+                let copyP = people.result.slice();
                 copyP.push({
                     profession: xss(profession),
                     imgUrl: resImg,
                     intro: resIntro
-                })
+                });
                 people.result = copyP
             }
         } else {
-            let result = randomIntro(profession)
-            resIntro = result.intro
-            resImg = result.imgUrl
+            let result = randomIntro(profession);
+            resIntro = result.intro;
+            resImg = result.imgUrl;
 
             people = {
                 openid: xss(openid),
                 result: [
                     {profession: xss(profession), imgUrl: resImg, intro: resIntro}
                 ]
-            }
+            };
             people = new ExamResult(people)
         }
 
         try {
-            await people.save()
+            await people.save();
             ctx.body = {
                 success: true,
                 data: {

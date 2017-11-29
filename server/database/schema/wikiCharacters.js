@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
-const {Schema} = mongoose
-const Mixed = Schema.Types.Mixed
+const mongoose = require('mongoose');
+const {Schema} = mongoose;
+const Mixed = Schema.Types.Mixed;
 
 const WikiCharacterSchema = new Schema({
     _id: String,
@@ -21,6 +21,6 @@ const WikiCharacterSchema = new Schema({
         String
     ],
     wikiId: Number
-})
+});
 
-mongoose.model('WikiCharacter', WikiCharacterSchema)
+mongoose.model('WikiCharacter', WikiCharacterSchema);

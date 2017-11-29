@@ -44,8 +44,8 @@ const tpl = `
       </Articles>
     <% } %>
   </xml>
-`
+`;
 
-const compiled = ejs.compile(tpl)
+const compiled = ejs.compile(tpl);
 
 export default compiled

@@ -75,15 +75,15 @@ const answer = [
       '由于长相俊美，遭遇其他法师的妒忌排挤，你难过的戴上了面具。十年后，变成了法力最高强的法师的你，摘掉面具留着激动的泪水仰天长啸：对！我就是明明可以靠脸吃饭却偏偏靠才华本人！'
     ]
   }
-]
+];
 
 function getIndex (arr, i) {
   return i > 0 ? (arr[i] || getIndex(arr, i - 1)) : arr[0]
 }
 
 export function randomIntro (profession) {
-  const i = Math.floor(Math.random() * 3)
-  const target = answer.find(e => e.profession === profession)
+    const i = Math.floor(Math.random() * 3);
+    const target = answer.find(e => e.profession === profession);
 
   if (target) {
     return {

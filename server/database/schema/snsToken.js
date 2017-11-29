@@ -1,6 +1,6 @@
-var mongoose = require('mongoose')
-var Schema = mongoose.Schema
-var SnsToken
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var SnsToken;
 
 // https://wohugb.gitbooks.io/wechat/content/qrconnent/refresh_token.html
 var SnsTokenSchema = new mongoose.Schema({
@@ -18,7 +18,7 @@ var SnsTokenSchema = new mongoose.Schema({
             default: Date.now()
         }
     }
-})
+});
 
 SnsTokenSchema.pre('save', function (next) {
     if (this.isNew) {
@@ -28,16 +28,16 @@ SnsTokenSchema.pre('save', function (next) {
     }
 
     next()
-})
+});
 
 SnsTokenSchema.statics = {
     async getAccessSnsToken() {
         return await this.findOne({name: 'access_token'}).exec()
     },
     async saveAccessSnsToken(data) {
-        let snsToken = await this.findOne({name: 'access_token'}).exec()
+        let snsToken = await this.findOne({name: 'access_token'}).exec();
         if (snsToken) {
-            snsToken.access_token = data.access_token
+            snsToken.access_token = data.access_token;
             snsToken.expires_in = data.expires_in
         } else {
             snsToken = new SnsToken({
@@ -47,10 +47,10 @@ SnsTokenSchema.statics = {
             })
         }
 
-        await snsToken.save()
+        await snsToken.save();
 
         return data
     }
-}
+};
 
-mongoose.model('SnsToken', SnsTokenSchema)
+mongoose.model('SnsToken', SnsTokenSchema);

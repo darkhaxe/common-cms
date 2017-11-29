@@ -4,18 +4,18 @@ import _ from 'lodash'
 import R from 'ramda'
 import {writeFileSync} from 'fs'
 
-const WikiCharacter = mongoose.model('WikiCharacter')
-const WikiHouse = mongoose.model('WikiHouse')
+const WikiCharacter = mongoose.model('WikiCharacter');
+const WikiHouse = mongoose.model('WikiHouse');
 
 @controller('/wiki')
 export class WikiController {
     @get('/characters/:_id')
     @log
     async getCharacter(ctx, next) {
-        const {params} = ctx
-        const {_id} = params
+        const {params} = ctx;
+        const {_id} = params;
 
-        let character = await WikiCharacter.findById(_id).exec()
+        let character = await WikiCharacter.findById(_id).exec();
 
         ctx.body = {data: character, success: true}
     }
@@ -23,20 +23,20 @@ export class WikiController {
     @put('/characters/:_id')
     @log
     async putCharacter(ctx, next) {
-        const {params} = ctx
-        const {_id} = params
-        const {body} = ctx.request
+        const {params} = ctx;
+        const {_id} = params;
+        const {body} = ctx.request;
 
-        let character = await WikiCharacter.findById(_id).exec()
+        let character = await WikiCharacter.findById(_id).exec();
 
-        character.sections = body.sections
-        character.profile = body.profile
-        character.name = body.name
-        character.cname = body.cname
-        character.playedBy = body.playedBy
-        character.images = body.images
+        character.sections = body.sections;
+        character.profile = body.profile;
+        character.name = body.name;
+        character.cname = body.cname;
+        character.playedBy = body.playedBy;
+        character.images = body.images;
 
-        character = await character.save()
+        character = await character.save();
 
         return ctx.body = {data: character, success: true}
 
@@ -45,11 +45,11 @@ export class WikiController {
     @get('/characters')
     @log
     async getCharacters(ctx, next) {
-        let {limit = 20} = ctx.query
+        let {limit = 20} = ctx.query;
         let characters = await WikiCharacter
             .find({})
             .limit(Number(limit))
-            .exec()
+            .exec();
 
         ctx.body = {
             data: characters,
@@ -60,10 +60,10 @@ export class WikiController {
     @get('/houses/:_id')
     @log
     async getHouse(ctx, next) {
-        const {params} = ctx
-        const {_id} = params
+        const {params} = ctx;
+        const {_id} = params;
 
-        if (!_id) return (ctx.body = '_id is required')
+        if (!_id) return (ctx.body = '_id is required');
 
         let house = await WikiHouse
             .findById(_id)
@@ -71,7 +71,7 @@ export class WikiController {
                 path: 'swornMembers.character',
                 select: 'name cname profile nmId'
             })
-            .exec()
+            .exec();
 
         ctx.body = {data: house, success: true}
     }
@@ -79,19 +79,19 @@ export class WikiController {
     @put('houses/:_id')
     @log
     async putHouse(ctx, next) {
-        const {params} = ctx
-        const {_id} = params
-        const {body} = ctx.request
+        const {params} = ctx;
+        const {_id} = params;
+        const {body} = ctx.request;
 
-        let house = await WikiHouse.findById(_id).exec()
+        let house = await WikiHouse.findById(_id).exec();
 
-        house.sections = body.sections
-        house.swornMembers = body.swornMembers
-        house.words = body.words
-        house.name = body.name
-        house.cname = body.cname
+        house.sections = body.sections;
+        house.swornMembers = body.swornMembers;
+        house.words = body.words;
+        house.name = body.name;
+        house.cname = body.cname;
 
-        house = await house.save()
+        house = await house.save();
 
         return ctx.body = {data: house, success: true}
     }
@@ -105,7 +105,7 @@ export class WikiController {
                 path: 'swornMembers.character',
                 select: '_id name cname profile'
             })
-            .exec()
+            .exec();
 
         ctx.body = {data: houses, success: true}
     }
