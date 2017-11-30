@@ -1,36 +1,14 @@
-<template lang="pug">
-    .container
-        <!--img(src="~static/images/error.jpg")-->
-        //h1.title {{ error.statusCode }}
-        //h2.info {{ error.message }}
-        nuxt-link.button(to='/' v-if='error.statusCode === 404') goto Homepage
+<template>
+    <div class="container">
+        <h1 v-if="error.statusCode === 404">页面不存在</h1>
+        <h1 v-else>应用发生错误异常</h1>
+        <nuxt-link to="/">首 页</nuxt-link>
+    </div>
 </template>
+
 <script>
     export default {
-        props: ['error']
+        props: ['error'],
+        layout: 'blog' // 你可以为错误页面指定自定义的布局
     }
 </script>
-
-<style scoped lang="sass">
-    .container
-        text-align: center
-
-        > *
-            width: auto
-            height: auto
-        img
-            width: 50% !important
-
-        .title
-            margin-top: 15px
-            font-size: 5em
-
-        .info
-            font-weight: 300
-            color: #9aabb1
-            margin: 0
-
-        .button
-            margin-top: 50px
-
-</style>
